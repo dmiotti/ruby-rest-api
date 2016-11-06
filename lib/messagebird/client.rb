@@ -36,6 +36,7 @@ module MessageBird
       # Construct the HTTP GET or POST request.
       request = Net::HTTP::Get.new(uri.request_uri)  if method == :get
       request = Net::HTTP::Post.new(uri.request_uri) if method == :post
+      request = Net::HTTP::Delete.new(uri.request_uri) if method == :delete
       request['Accept']        = 'application/json'
       request['Authorization'] = "AccessKey #{@access_key}"
       request['User-Agent']    = "MessageBird/ApiClient/#{CLIENT_VERSION} Ruby/#{RUBY_VERSION}"
@@ -45,6 +46,9 @@ module MessageBird
 
       # Execute the request and fetch the response.
       response = http.request(request)
+
+      # If we made a delete request, just return
+      return if method == :delete
 
       # Parse the HTTP response.
       case response.code.to_i
@@ -121,6 +125,11 @@ module MessageBird
           :originator => originator.to_s,
           :body       => body.to_s,
           :recipients => recipients })))
+    end
+
+    # Delete a message
+    def message_delete(id)
+      request(:delete, "messages/#{id.to_s}")
     end
 
     # Retrieve the information of a specific voice message.
