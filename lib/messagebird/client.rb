@@ -132,6 +132,11 @@ module MessageBird
       request(:delete, "messages/#{id.to_s}")
     end
 
+    # Delete a voice message
+    def voice_message_delete(id)
+      request(:delete, "voicemessages/#{id.to_s}")
+    end
+
     # Retrieve the information of a specific voice message.
     def voice_message(id)
       VoiceMessage.new(request(:get, "voicemessages/#{id.to_s}"))
@@ -150,7 +155,7 @@ module MessageBird
 
     def lookup(phoneNumber, params={})
       Lookup.new(request(:get, "lookup/#{phoneNumber}", params))
-    end 
+    end
 
     def lookup_hlr_create(phoneNumber, params={})
       HLR.new(request(:post, "lookup/#{phoneNumber}/hlr", params))
